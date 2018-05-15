@@ -1,60 +1,47 @@
 import React, { Component } from 'react';
+import './App.css';
 
-const HOC = (InnerComponent) => class extends Component {
+class App extends Component {
   constructor() {
     super();
     this.state = {
-      count: 0
+      input: '/* add your jsx here */',
+      output: '',
+      err: ''
     }
   }
 
-  update() {
-    this.setState({
-      count: this.state.count + 1
-    })
-  }
-  
-  componentWillMount() {
-    console.log('componentWillMount');
+  update(e) {
+    let code = e.target.value;
+
+    try {
+      this.setState({
+        output: window.Babel
+            .transform(code, { presets: ['es2015', 'react']})
+            .code,
+            err: ''
+          })
+    }
+    catch(err) {
+      this.setState({ err: err.message })
+    }
   }
 
-  render() {
-    return <InnerComponent 
-              {...this.props}
-              {...this.state}
-              update={this.update.bind(this)} />
-  }
-}
-
-class App extends Component {
   render() {
     return (
       <div>
-        <Button>button</Button>
-        <hr />
-        <LabelHOC>label</LabelHOC>
+        <header>{this.state.err}</header>
+        <div className='container'>
+          <textarea
+            onChange={this.update.bind(this)}
+            defaultValue={this.state.input} />
+          <pre>
+            {this.state.output}
+          </pre>
+        </div>
       </div>
     );
   }
 }
-const Button = HOC((props) => {
-  return (
-    <button onClick={props.update}>{props.children} - {props.count}</button>
-  );
-});
-
-class Label extends Component {
-  componentWillMount() {
-    console.log('label will mount');
-  }
-
-  render() {
-    return (
-      <label onMouseMove={this.props.update} >{this.props.children} = {this.props.count}</label>
-    );
-  }
-}
-
-const LabelHOC = HOC(Label);
 
 export default App;
