@@ -20,13 +20,16 @@ class App extends Component {
 
     return (
       <div>
-        <input 
-          type="text" 
-          onChange={this.update.bind(this)} />
         <h1>{txt} - {cat}</h1>
+        <Widget update={this.update.bind(this)} />
+        <Widget update={this.update.bind(this)} />
+        <Widget update={this.update.bind(this)} />
       </div>
     );
   }
 }
+
+const Widget = (props) =>  
+<input type="text" onChange={props.update} />
 
 export default App;
