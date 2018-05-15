@@ -4,37 +4,40 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentEvent: '---'
+      a: '',
+      b: ''
     }
-
-    this.update = this.update.bind(this);
   }
 
   update(e) {
     this.setState({
-      currentEvent: e.type
+      a: this.a.refs.input.value,
+      b: this.refs.b.value
     })
   }
 
   render() {
-    const { currentEvent } = this.state;
     return (
       <div>
-        <textarea
-          onKeyPress={this.update}
-          onCopy={this.update}
-          onCut={this.update}
-          onPaste={this.update}
-          onFocus={this.update}
-          onBlur={this.update}
-          onDoubleClick={this.update}
-          onTouchStart={this.update}
-          onTouchMove={this.update}
-          onTouchEnd={this.update}
-          cols="30"
-          rows="10" />
-        <h1>{currentEvent}</h1>
+        <Input
+          ref={ component => this.a = component }
+          type="text"
+          update={this.update.bind(this)} />
+          {this.state.a}
+        <input
+          ref='b'
+          type="text"
+          onChange={this.update.bind(this)} />
+          {this.state.b}
       </div>
+    );
+  }
+}
+
+class Input extends Component {
+  render() {
+    return (
+      <div><input ref="input" type="text" onChange={this.props.update} /></div>
     );
   }
 }
